@@ -1,0 +1,9 @@
+kclus = 5; 
+vtype = [4 4]; 
+stdize = 0; 
+metric = 'eucli'; 
+nsamp = 5; 
+sampsize = 40 + 2 * kclus; 
+result_clara = clara(data, kclus, vtype, stdize, metric, nsamp, sampsize);
+gscatter(data(:,1), data(:,2), result_clara.ncluv);
+title('CLARA Clustering');
