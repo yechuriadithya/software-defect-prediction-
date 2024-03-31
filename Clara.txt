@@ -1,0 +1,48 @@
+% Load the dataset
+data = readtable("C:\Users\adith\OneDrive\Desktop\adithya\jm1.csv");
+
+% Select attributes for clustering
+attributes = data{:, 6:11}; % Selecting columns 6 to 11 as attributes
+
+% Normalize the data
+normalized_data = normalize(attributes);
+
+% Set parameters for CLARA
+k = 3; % Number of clusters
+numSamples = 10; % Number of samples for CLARA
+
+% Initialize minimum cost and best medoids
+minCost = inf;
+bestMedoids = zeros(k, size(normalized_data, 2));
+
+% Perform CLARA
+for i = 1:numSamples
+    % Sample a subset of data
+    sampleIndices = randperm(size(normalized_data, 1), k);
+    sampleData = normalized_data(sampleIndices, :);
+    
+    % Perform k-medoids clustering on the sample
+    [idx, medoids] = kmedoids(sampleData, k);
+    
+    % Compute the cost of the clustering
+    totalCost = sum(pdist2(normalized_data, sampleData(idx, :)).^2, 2);
+    
+    % Update if the current clustering has lower cost
+    if sum(totalCost) < minCost
+        minCost = sum(totalCost);
+        bestMedoids = sampleData(idx, :);
+    end
+end
+
+% Compute distances from each data point to medoids
+distances_to_medoids = pdist2(normalized_data, bestMedoids);
+
+% Assign data points to clusters based on the nearest medoid
+[~, cluster_assignment] = min(distances_to_medoids, [], 2);
+
+% Visualize the clusters (optional)
+scatter3(attributes(:,1), attributes(:,2), attributes(:,3), 10, cluster_assignment, 'filled');
+xlabel('total_Opnd');
+ylabel('branchCount');
+zlabel('defects');
+title('clara clusturing');
