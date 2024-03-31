@@ -1,0 +1,25 @@
+% Load the dataset
+data = readtable('C:\Users\adith\OneDrive\Desktop\adithya\jm1.csv');
+
+% Extract relevant columns for clustering
+X = table2array(data(:, 1:end-1)); % Exclude the last column (defects)
+
+% Normalize the data
+X = normalize(X);
+
+% Set DBSCAN parameters
+epsilon = 0.3; % Distance threshold
+MinPts = 5;   % Minimum number of points to form a cluster
+
+% Perform DBSCAN clustering
+[idx, ~] = dbscan(X, epsilon, MinPts);
+
+% Display the clustering results
+disp(idx);
+
+% Visualize the clustering results (assuming 2D data)
+scatter(X(:,1), X(:,2), [], idx, 'filled');
+xlabel('Feature 1');
+ylabel('Feature 2');
+title('DBSCAN Clustering');
+
