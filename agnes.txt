@@ -1,0 +1,36 @@
+% Load the dataset
+data = readtable('C:\Users\adith\OneDrive\Desktop\adithya\jm1.csv');
+
+% Extract features
+X = table2array(data(:, 1:end-1));
+
+% Perform AGNES clustering
+tree = linkage(X, 'average'); % You can use other linkage methods as well
+dendrogram(tree);
+
+% Adjust visualization if needed
+xlabel('Data Points');
+ylabel('Distance');
+title('AGNES Dendrogram');
+
+% Determine the optimal number of clusters (if needed)
+% For example, using the inconsistency criterion
+incons = inconsistency(tree);
+figure;
+plot(incons(:,4), 'b--o');
+xlabel('Index');
+ylabel('Inconsistency');
+title('Inconsistency Criterion');
+
+% Identify clusters (based on your criteria)
+% You may need to manually select the appropriate number of clusters
+% For example:
+num_clusters = 2; % Adjust as needed
+clusters = cluster(tree, 'maxclust', num_clusters);
+
+% Visualize the clustering result
+figure;
+gscatter(X(:,1), X(:,2), clusters);
+xlabel('Feature 1');
+ylabel('Feature 2');
+title('AGNES Clustering Result');
